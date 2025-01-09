@@ -28,10 +28,10 @@ export default function RegisterForm() {
             <div>
               <input
                 {...register("fullName", {
-                  required: "Full name is required",
+                  required: "Name is required",
                   minLength: {
                     value: 2,
-                    message: "Full name must be at least 2 characters",
+                    message: "Name must be at least 2 characters",
                   },
                 })}
                 className="w-full p-3 py-2.5 border-2 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"

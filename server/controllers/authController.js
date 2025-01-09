@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
         await User.create({ fullName, email, password: hashedPassword });
         res.status(201).json({ status: "success", msg: "User created successfully" });
     } catch (error) {
-        res.status(500).json({ status: "error", msg: "Server error" });
+        res.status(500).json({ status: "error", msg: error.message });
     }
 };
 
@@ -37,6 +37,6 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
         res.status(200).json({ status: "success", msg: "Login successfully.", token });
     } catch (error) {
-        res.status(500).json({ status: "error", msg: "Server error" });
+        res.status(500).json({ status: "error", msg: error.message });
     }
 };

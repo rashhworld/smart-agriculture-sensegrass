@@ -1,18 +1,21 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../apis/auth";
+import { useAuth } from "../context/AuthContext";
 
 export default function LoginForm() {
+  const { login: authLogin } = useAuth();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     const response = await loginUser(data);
-    localStorage.setItem("token", response.token);
+    authLogin(response.token);
     navigate("/");
   };
 
