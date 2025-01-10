@@ -6,8 +6,7 @@ exports.createField = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).json({ status: "error", msg: errors.array()[0].msg });
 
-        const field = new Field({ ...req.body, user: req.user.userId });
-        await field.save();
+        const field = await Field.create({ ...req.body, user: req.user.userId });
         res.status(201).json({ status: "success", msg: "Field created successfully", field });
     } catch (error) {
         res.status(500).json({ status: "error", msg: error.message });

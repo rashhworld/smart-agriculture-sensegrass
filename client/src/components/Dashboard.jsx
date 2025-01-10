@@ -8,6 +8,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import FieldModal from "./FieldModal";
+import AIInsights from "./AIInsights";
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -133,6 +134,7 @@ export default function Dashboard() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     {field.name}
                   </h3>
+                  <AIInsights fieldId={field._id} />
                   <div className="space-y-3">
                     <div className="flex items-center text-gray-600 bg-gray-50 p-2 rounded-lg">
                       <svg
