@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { getFieldAnalysis } from "../apis/ai";
+import FieldStats from "./FieldStats";
 
-export default function AIInsights({ fieldId }) {
+export default memo(function AIInsights({ fieldId }) {
   const [analysis, setAnalysis] = useState(null);
 
   useEffect(() => {
@@ -16,8 +17,8 @@ export default function AIInsights({ fieldId }) {
   if (!analysis) return null;
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold mb-3">Soil Health</h3>
           <div className="space-y-2">
@@ -59,18 +60,20 @@ export default function AIInsights({ fieldId }) {
             </div>
           </div>
         </div>
+
+        <div className="bg-white p-4 rounded-lg shadow-sm">
+          <h3 className="text-lg font-semibold mb-3">AI Recommendations</h3>
+          <ul className="list-disc ps-4 space-y-2">
+            {analysis.recommendations.map((rec, index) => (
+              <li key={index} className="text-gray-600">
+                {rec}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h3 className="text-lg font-semibold mb-3">AI Recommendations</h3>
-        <ul className="list-disc list-inside space-y-2">
-          {analysis.recommendations.map((rec, index) => (
-            <li key={index} className="text-gray-600">
-              {rec}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <FieldStats aiAnalysis={analysis} />
     </div>
   );
-}
+});
