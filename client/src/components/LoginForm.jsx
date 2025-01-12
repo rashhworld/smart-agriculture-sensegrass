@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../apis/auth";
 import { useAuth } from "../context/AuthContext";
+import { PiSpinner } from "react-icons/pi";
 
 export default function LoginForm() {
   const { login: authLogin } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -14,9 +17,14 @@ export default function LoginForm() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const response = await loginUser(data);
-    authLogin(response.token);
-    navigate("/");
+    setLoading(true);
+    try {
+      const response = await loginUser(data);
+      authLogin(response.token);
+      navigate("/");
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,6 +39,7 @@ export default function LoginForm() {
           <div className="space-y-3">
             <div>
               <input
+                type="email"
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -65,9 +74,14 @@ export default function LoginForm() {
           <div>
             <button
               type="submit"
+              disabled={loading}
               className="w-full p-3 py-2.5 border-2 rounded-lg focus:border-indigo-500 text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Sign in
+              {loading ? (
+                <PiSpinner className="inline-block mx-auto animate-spin h-6 w-6" />
+              ) : (
+                "Sign in"
+              )}
             </button>
           </div>
         </form>

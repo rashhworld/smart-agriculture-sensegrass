@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { RiCloseLargeLine } from "react-icons/ri";
 
 export default function FieldModal({
   isOpen,
   onClose,
   onSubmit,
   editingField,
+  totalFields,
 }) {
   const {
     register,
@@ -33,6 +35,12 @@ export default function FieldModal({
   }, [editingField, setValue, reset, isOpen]);
 
   const handleFormSubmit = async (data) => {
+    if (!editingField && totalFields >= 1) {
+      if (!confirm("5 credits will be charged for adding a new field. Want to proceed?")) {
+        return;
+      }
+    }
+
     await onSubmit(data);
     reset();
     onClose();
@@ -46,30 +54,24 @@ export default function FieldModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50">
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50"
+      onClick={handleClose}
+    >
       <div className="flex min-h-screen items-center justify-center p-4">
-        <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+        <div
+          className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="flex items-center justify-between border-gray-200 pb-4 mb-3">
             <h2 className="uppercase font-semibold text-gray-900">
               {editingField ? "Edit Field data" : "Add Field Data"}
             </h2>
             <button
               onClick={handleClose}
-              className="rounded-full p-1 hover:bg-gray-100 transition-colors"
+              className="text-gray-600 hover:text-gray-900"
             >
-              <svg
-                className="h-5 w-5 text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <RiCloseLargeLine />
             </button>
           </div>
 

@@ -40,3 +40,18 @@ exports.login = async (req, res) => {
         res.status(500).json({ status: "error", msg: error.message });
     }
 };
+
+exports.getUserCredits = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId).select('credits');
+        res.status(200).json({
+            status: 'success',
+            credits: user.credits
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            msg: error.message
+        });
+    }
+};

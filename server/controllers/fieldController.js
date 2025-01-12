@@ -1,3 +1,4 @@
+const User = require('../models/User');
 const Field = require('../models/Field');
 const { validationResult } = require('express-validator');
 
@@ -5,6 +6,12 @@ exports.createField = async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).json({ status: "error", msg: errors.array()[0].msg });
+
+        const user = await User.findById(req.user.userId);
+        const totalfields = (await Field.find({ user: req.user.userId })).length;
+
+        if (user.credits < 5 && totalfields >= 1) return res.status(400).json({ status: "error", msg: "Insufficient credits." });
+        if (totalfields >= 1) await User.findByIdAndUpdate(req.user.userId, { $inc: { credits: -5 } });
 
         const field = await Field.create({ ...req.body, user: req.user.userId });
         res.status(201).json({ status: "success", msg: "Field created successfully", field });

@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const fieldRoutes = require('./routes/fieldRoutes');
 const tokenValidator = require('./middleware/tokenValidator');
 const aiRoutes = require('./routes/aiRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api/fields', tokenValidator, fieldRoutes);
 app.use('/api/ai', tokenValidator, aiRoutes);
+app.use('/api/payments', tokenValidator, paymentRoutes);
 
 app.get('/', (req, res) => {
     res.status(200).send({ status: "success", msg: "API is working well." });

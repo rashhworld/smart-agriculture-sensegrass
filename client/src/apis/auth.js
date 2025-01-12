@@ -22,3 +22,13 @@ export const loginUser = async (userData) => {
         throw error.response?.data || { msg: 'Something went wrong' };
     }
 };
+
+export const getUserCredits = async () => {
+    try {
+        const response = await API.get('/credits');
+        return response.data;
+    } catch (error) {
+        toast.error(error.response?.data?.msg || 'Failed to fetch credits');
+        throw error;
+    }
+};
