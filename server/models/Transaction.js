@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// schema for the "Transaction" model
 const transactionSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,

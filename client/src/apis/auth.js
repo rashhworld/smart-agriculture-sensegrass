@@ -1,6 +1,7 @@
 import API from './config';
 import { toast } from 'react-hot-toast';
 
+// Register user api call
 export const registerUser = async (userData) => {
     try {
         const response = await API.post('/register', userData);
@@ -12,6 +13,7 @@ export const registerUser = async (userData) => {
     }
 };
 
+// Login user api call
 export const loginUser = async (userData) => {
     try {
         const response = await API.post('/login', userData);
@@ -23,6 +25,7 @@ export const loginUser = async (userData) => {
     }
 };
 
+// Fetch user credits
 export const getUserCredits = async () => {
     try {
         const response = await API.get('/credits');

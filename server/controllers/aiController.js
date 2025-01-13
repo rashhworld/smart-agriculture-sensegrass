@@ -1,21 +1,25 @@
+// generate dummy AI analysis data
 const generateDummyAIAnalysis = () => {
+    // Simulating soil health data with random values
     const soilHealth = {
-        score: Math.floor(Math.random() * 100),
-        ph: (Math.random() * (8.5 - 5.5) + 5.5).toFixed(1),
-        nitrogen: Math.floor(Math.random() * 100),
-        phosphorus: Math.floor(Math.random() * 100),
-        potassium: Math.floor(Math.random() * 100),
-        organicMatter: (Math.random() * (5 - 1) + 1).toFixed(1),
+        score: Math.floor(Math.random() * 100), // Random score between 0 and 100 for overall soil health
+        ph: (Math.random() * (8.5 - 5.5) + 5.5).toFixed(1), // Random pH level between 5.5 and 8.5
+        nitrogen: Math.floor(Math.random() * 100), // Random nitrogen level percentage
+        phosphorus: Math.floor(Math.random() * 100), // Random phosphorus level percentage
+        potassium: Math.floor(Math.random() * 100), // Random potassium level percentage
+        organicMatter: (Math.random() * (5 - 1) + 1).toFixed(1), // Random organic matter percentage between 1 and 5
     };
 
+    // Simulating crop health data with random values
     const cropHealth = {
-        score: Math.floor(Math.random() * 100),
-        diseaseRisk: Math.floor(Math.random() * 100),
-        pestRisk: Math.floor(Math.random() * 100),
-        growthRate: Math.floor(Math.random() * 100),
-        stressLevel: Math.floor(Math.random() * 100),
+        score: Math.floor(Math.random() * 100), // Random score between 0 and 100 for overall crop health
+        diseaseRisk: Math.floor(Math.random() * 100), // Random disease risk percentage
+        pestRisk: Math.floor(Math.random() * 100), // Random pest risk percentage
+        growthRate: Math.floor(Math.random() * 100), // Random growth rate percentage
+        stressLevel: Math.floor(Math.random() * 100), // Random stress level percentage
     };
 
+    // generic agricultural recommendations
     const recommendations = [
         "Consider adding nitrogen-rich fertilizers",
         "Maintain proper irrigation schedule",
@@ -47,16 +51,13 @@ const generateDummyAIAnalysis = () => {
         "Use organic pest repellents for eco-friendly farming",
         "Trim overgrown foliage for better air circulation",
         "Track weather conditions for timely interventions"
-    ].sort(() => Math.random() - 0.5).slice(0, 2);
+    ].sort(() => Math.random() - 0.5).slice(0, 2); // Select two random recommendations
 
-    return {
-        soilHealth,
-        cropHealth,
-        recommendations,
-        timestamp: new Date(),
-    };
+    // Returning the analysis data as an object
+    return { soilHealth, cropHealth, recommendations, timestamp: new Date() };
 };
 
+// API handler to provide field analysis
 exports.getFieldAnalysis = async (req, res) => {
     try {
         const analysis = generateDummyAIAnalysis();
@@ -64,4 +65,4 @@ exports.getFieldAnalysis = async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: "error", msg: error.message });
     }
-}; 
+};

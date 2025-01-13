@@ -1,3 +1,4 @@
+// Importing necessary libraries, APIs, and components
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { RiCloseLargeLine } from "react-icons/ri";
@@ -17,14 +18,17 @@ export default function FieldModal({
     formState: { errors },
   } = useForm();
 
+  // Populate form if editingField is provided, otherwise reset form
   useEffect(() => {
     if (editingField) {
+      // Pre-fill form values when editing
       setValue("name", editingField.name);
       setValue("location.latitude", editingField.location.latitude);
       setValue("location.longitude", editingField.location.longitude);
       setValue("cropType", editingField.cropType);
       setValue("areaSize", editingField.areaSize);
     } else {
+      // Reset form for creating a new field
       reset({
         name: "",
         location: { latitude: "", longitude: "" },
@@ -34,34 +38,38 @@ export default function FieldModal({
     }
   }, [editingField, setValue, reset, isOpen]);
 
+  // Handle form submission
   const handleFormSubmit = async (data) => {
+    // Check credits when adding a new field and totalFields >= 1
     if (!editingField && totalFields >= 1) {
       if (!confirm("5 credits will be charged for adding a new field. Want to proceed?")) {
-        return;
+        return; // Stop if user cancels
       }
     }
 
-    await onSubmit(data);
-    reset();
-    onClose();
+    await onSubmit(data); // Call onSubmit with form data
+    reset(); // Reset form fields
+    onClose(); // Close the modal
   };
 
+  // Reset and close modal when cancelled
   const handleClose = () => {
     reset();
     onClose();
   };
 
+  // Do not render anything if modal is not open
   if (!isOpen) return null;
 
   return (
     <div
       className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50"
-      onClick={handleClose}
+      onClick={handleClose} // close modal when click outside
     >
       <div className="flex min-h-screen items-center justify-center p-4">
         <div
           className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()} // do not close modal when click inside
         >
           <div className="flex items-center justify-between border-gray-200 pb-4 mb-3">
             <h2 className="uppercase font-semibold text-gray-900">
@@ -76,6 +84,7 @@ export default function FieldModal({
           </div>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
+            {/* Field name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Field Name
@@ -91,6 +100,7 @@ export default function FieldModal({
               )}
             </div>
 
+            {/* Latitude and Longitude inputs */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -129,6 +139,7 @@ export default function FieldModal({
               </div>
             </div>
 
+            {/* Crop type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Crop Type
@@ -144,6 +155,7 @@ export default function FieldModal({
               )}
             </div>
 
+            {/* Area size */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Area Size (hectares)
@@ -165,6 +177,7 @@ export default function FieldModal({
               )}
             </div>
 
+            {/* submit and cancel button */}
             <div className="flex justify-end space-x-3 pt-2">
               <button
                 type="button"

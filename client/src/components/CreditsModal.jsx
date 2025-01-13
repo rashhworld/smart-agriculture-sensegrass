@@ -1,3 +1,4 @@
+// Importing necessary libraries and components
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
@@ -9,19 +10,24 @@ import {
 } from "@stripe/react-stripe-js";
 import { createPaymentIntent, saveTransaction } from "../apis/payment";
 import { RiCloseLargeLine } from "react-icons/ri";
+import { PiSpinner } from "react-icons/pi";
 
+// Initializing Stripe with the publishable key from environment variables
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
+// Credit options available for the user to choose
 const CREDIT_OPTIONS = [10, 20, 50, 100, 1000];
 
+// Form for handling the payment process
 function CheckoutForm({ amount, onSuccess, onClose }) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [loading, setLoading] = useState(false);
+  const stripe = useStripe(); // Access Stripe instance
+  const elements = useElements(); // Access Stripe elements
+  const [loading, setLoading] = useState(false); // Loading state during payment processing
 
+  // Handles form submission and payment confirmation
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
+    if (!stripe || !elements) return; // Ensure Stripe and elements are loaded
 
     setLoading(true);
     const { error, paymentIntent } = await stripe.confirmPayment({
@@ -35,6 +41,7 @@ function CheckoutForm({ amount, onSuccess, onClose }) {
       toast.error(error.message);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       try {
+        // Save the transaction details
         await saveTransaction({
           amount: paymentIntent.amount / 100,
           paymentId: paymentIntent.id,
@@ -42,8 +49,8 @@ function CheckoutForm({ amount, onSuccess, onClose }) {
         });
 
         toast.success("Payment successful!");
-        onSuccess();
-        onClose();
+        onSuccess(); // Notify parent component of success
+        onClose(); // Close the modal
       } catch (error) {
         console.error("Failed to save transaction:", error);
       }
@@ -55,7 +62,7 @@ function CheckoutForm({ amount, onSuccess, onClose }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <PaymentElement />
+      <PaymentElement /> {/* Stripe payment UI */}
       <div className="flex justify-end space-x-3 mt-6">
         <button
           type="button"
@@ -76,22 +83,25 @@ function CheckoutForm({ amount, onSuccess, onClose }) {
   );
 }
 
+// Main modal component for adding credits
 export default function CreditsModal({ isOpen, onClose, onSuccess }) {
-  const [selectedAmount, setSelectedAmount] = useState(null);
-  const [clientSecret, setClientSecret] = useState(null);
+  const [selectedAmount, setSelectedAmount] = useState(null); // Selected credit amount
+  const [clientSecret, setClientSecret] = useState(null); // Client secret for Stripe payment
 
+  // Close the modal and reset state
   const handleClose = () => {
     onClose();
     setSelectedAmount(null);
     setClientSecret(null);
   };
 
+  // Fetch client secret when a credit amount is selected
   useEffect(() => {
     (async () => {
       if (selectedAmount) {
         try {
-          const data = await createPaymentIntent(selectedAmount);
-          setClientSecret(data.clientSecret);
+          const data = await createPaymentIntent(selectedAmount); // API call to create a payment intent
+          setClientSecret(data.clientSecret); // Set client secret for Stripe Elements
         } catch (error) {
           console.error(error);
         }
@@ -99,18 +109,13 @@ export default function CreditsModal({ isOpen, onClose, onSuccess }) {
     })();
   }, [selectedAmount]);
 
+  // Render nothing if the modal is not open
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50"
-      onClick={handleClose}
-    >
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-600 bg-opacity-50">
       <div className="flex min-h-screen items-center justify-center p-4">
-        <div
-          className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
           <div className="flex items-center justify-between border-gray-200 pb-4">
             <h2 className="uppercase font-semibold text-gray-900">
               Add Credits
@@ -123,6 +128,7 @@ export default function CreditsModal({ isOpen, onClose, onSuccess }) {
             </button>
           </div>
 
+          {/* Card details for test payments */}
           <p className="text-sm text-gray-500 mb-2">
             Select the amount and use the below card details.
           </p>
@@ -132,8 +138,10 @@ export default function CreditsModal({ isOpen, onClose, onSuccess }) {
             <p>CVC : 123</p>
           </div>
 
+          {/* Render credit options or payment form based on user selection */}
           {!selectedAmount ? (
             <div className="grid grid-cols-3 gap-3 mb-6">
+              {/* Buttons for selecting credit amount */}
               {CREDIT_OPTIONS.map((amount) => (
                 <button
                   key={amount}
@@ -146,6 +154,7 @@ export default function CreditsModal({ isOpen, onClose, onSuccess }) {
               ))}
             </div>
           ) : clientSecret ? (
+            // Stripe Elements for payment processing
             <Elements
               stripe={stripePromise}
               options={{
@@ -165,8 +174,9 @@ export default function CreditsModal({ isOpen, onClose, onSuccess }) {
               />
             </Elements>
           ) : (
-            <div class="flex items-center justify-center">
-              <div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            // Loading spinner while waiting for client secret
+            <div className="flex items-center justify-center">
+              <PiSpinner className="animate-spin h-7 w-7" />
             </div>
           )}
         </div>

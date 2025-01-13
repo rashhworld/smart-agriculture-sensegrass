@@ -1,6 +1,7 @@
 import API from './config';
 import { toast } from 'react-hot-toast';
 
+// create a payment intent api call
 export const createPaymentIntent = async (amount) => {
     try {
         const response = await API.post('/payments/create-payment-intent', { amount });
@@ -11,6 +12,7 @@ export const createPaymentIntent = async (amount) => {
     }
 };
 
+// save transaction details api call
 export const saveTransaction = async (transactionData) => {
     try {
         const response = await API.post('/payments/save-transaction', transactionData);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// schema for the "Field" model
 const fieldSchema = new mongoose.Schema({
     name: {
         type: String,

@@ -1,6 +1,7 @@
 import API from './config';
 import { toast } from 'react-hot-toast';
 
+// create field api call
 export const createField = async (fieldData) => {
     try {
         const response = await API.post('/fields', fieldData);
@@ -12,6 +13,7 @@ export const createField = async (fieldData) => {
     }
 };
 
+// get all the fields api call
 export const getFields = async () => {
     try {
         const response = await API.get('/fields');
@@ -22,6 +24,7 @@ export const getFields = async () => {
     }
 };
 
+// update fields data api call
 export const updateField = async (id, fieldData) => {
     try {
         const response = await API.put(`/fields/${id}`, fieldData);
@@ -33,6 +36,7 @@ export const updateField = async (id, fieldData) => {
     }
 };
 
+// delete field data api call
 export const deleteField = async (id) => {
     try {
         const response = await API.delete(`/fields/${id}`);

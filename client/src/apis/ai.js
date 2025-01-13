@@ -1,6 +1,7 @@
 import API from './config';
 import { toast } from 'react-hot-toast';
 
+// Fetch field analysis for a given fieldId
 export const getFieldAnalysis = async (fieldId) => {
     try {
         const response = await API.get(`/ai/analysis/${fieldId}`);
